@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,6 +35,34 @@ namespace Todo.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Todo API", Version = "v1" });
+
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows()
+                    {
+                        Implicit = new OpenApiOAuthFlow()
+                        {
+                            AuthorizationUrl = new Uri("http://localhost:7002/connect/authorize"),
+                            TokenUrl = new Uri("http://localhost:7002/connect/token"),
+                            Scopes = new Dictionary<string, string>()
+                            {
+                                { "todo", "Todo API" }
+                            }
+                        }
+                    }
+                });
+            });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "http://localhost:7002";
+                options.RequireHttpsMetadata = false;
+                options.Audience = "todo";
             });
 
             services.AddControllers();
@@ -55,6 +84,8 @@ namespace Todo.API
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo API V1");
+                c.OAuthClientId("todoswaggerui");
+                c.OAuthAppName("Todo Swagger UI");
             });
 
             app.UseRouting();

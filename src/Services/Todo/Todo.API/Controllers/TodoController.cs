@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Todo.API.Domain;
@@ -9,6 +10,7 @@ using Todo.API.Domain;
 namespace Todo.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class TodoController : ControllerBase
     {
