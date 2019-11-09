@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Todo.API.Domain;
 using Todo.API.Infrastructure;
+using Todo.API.Infrastructure.Filters;
 
 namespace Todo.API
 {
@@ -52,6 +53,8 @@ namespace Todo.API
                         }
                     }
                 });
+
+                c.OperationFilter<AuthorizeCheckOperationFilter>();
             });
 
             services.AddAuthentication(options =>
@@ -60,7 +63,7 @@ namespace Todo.API
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = "http://localhost:7002";
+                options.Authority = "http://identity";
                 options.RequireHttpsMetadata = false;
                 options.Audience = "todo";
             });
@@ -90,6 +93,7 @@ namespace Todo.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

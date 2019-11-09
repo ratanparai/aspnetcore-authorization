@@ -37,16 +37,5 @@ namespace Identity
                     }
                 }
             };
-
-        public static List<TestUser> Users =>
-            new List<TestUser>
-            {
-                new TestUser()
-                {
-                    Username = "ratanparai",
-                    Password = "1234",
-                    IsActive = true,
-                }
-            };
     }
 }
