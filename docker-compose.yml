@@ -6,3 +6,10 @@ services:
     build:
       context: .
       dockerfile: src/Services/Todo/Todo.API/Dockerfile
+
+  identity:
+    image: ${DOCKER_REGISTRY-}identity
+    build:
+      context: .
+      dockerfile: src/Services/Identity/Dockerfile
+

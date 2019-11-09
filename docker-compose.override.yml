@@ -7,3 +7,9 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "7001:80"
+  identity:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "7002:80"
