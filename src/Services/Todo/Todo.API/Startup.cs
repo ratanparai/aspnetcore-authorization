@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Todo.API.Domain;
 using Todo.API.Infrastructure;
 
@@ -30,6 +31,11 @@ namespace Todo.API
             services.AddSingleton(typeof(InMemoryDb<>));
             services.AddScoped<ITodoTaskRepository, TodoTaskRepository>();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Todo API", Version = "v1" });
+            });
+
             services.AddControllers();
         }
 
@@ -41,7 +47,15 @@ namespace Todo.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo API V1");
+            });
 
             app.UseRouting();
 
